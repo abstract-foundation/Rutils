@@ -1,4 +1,4 @@
-package rutils
+package rcp
 
 type MessageRCP struct {
 	Domain   string `json:"domain"`
@@ -19,29 +19,37 @@ type MessageRCP struct {
 type ResponseRCP struct {
 	Sender   string `json:"sender"`
 	Accepted bool   `json:"accepted"`
+	// Optional
+	Content string `json:"content"`
 }
 
 type ServerRCP struct {
 	Host string
 	Port int
 
-	Peers            []string
-	MessageHandlers  map[string]func(message MessageRCP)
-	ResponseHandlers map[string]func(message ResponseRCP)
+	Peers            *PeerList
+	MessageHandlers  map[string][]func(message MessageRCP) (bool, string)
+	ResponseHandlers map[string]func(message ResponseRCP) bool
 }
 
 func NewServerRCP(host string, port int) *ServerRCP {
 	return &ServerRCP{
 		Host:             host,
 		Port:             port,
-		Peers:            make([]string, 0),
-		MessageHandlers:  make(map[string]func(message MessageRCP)),
-		ResponseHandlers: make(map[string]func(message ResponseRCP)),
+		Peers:            &PeerList{},
+		MessageHandlers:  make(map[string][]func(message MessageRCP) (bool, string)),
+		ResponseHandlers: make(map[string]func(message ResponseRCP) bool),
 	}
 }
 
-func (rcp *ServerRCP) RegisterMessageHandler(endpoint string, handler func(message MessageRCP)) {
-	rcp.MessageHandlers[endpoint] = handler
+func (rcp *ServerRCP) RegisterMessageHandler(endpoint string, handler func(message MessageRCP) (bool, string)) {
+	// WARNINING : NEVER ADD DUPLICATE HANDLERS (THIS WILL CAUSE SEVERE BUGS)
+
+	if _, contains := rcp.MessageHandlers[endpoint]; !contains {
+		rcp.MessageHandlers[endpoint] = make([]func(message MessageRCP) (bool, string), 0)
+	}
+
+	rcp.MessageHandlers[endpoint] = append(rcp.MessageHandlers[endpoint], handler)
 }
 
 func (rcp *ServerRCP) RemoveMessageHandler(endpoint string) {
@@ -50,7 +58,7 @@ func (rcp *ServerRCP) RemoveMessageHandler(endpoint string) {
 	}
 }
 
-func (rcp *ServerRCP) RegisterResponseHandler(endpoint string, handler func(message ResponseRCP)) {
+func (rcp *ServerRCP) RegisterResponseHandler(endpoint string, handler func(message ResponseRCP) bool) {
 	rcp.ResponseHandlers[endpoint] = handler
 }
 
