@@ -1,4 +1,4 @@
-module github.com/Awesome-Sauces/Rutils
+module github.com/Rivative-Foundation/Rutils
 
 go 1.21.1
 
