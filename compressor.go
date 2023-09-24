@@ -6,7 +6,7 @@ import (
 	"github.com/pierrec/lz4"
 )
 
-func compressString(input string) ([]byte, error) {
+func CompressString(input string) ([]byte, error) {
 	var b bytes.Buffer
 	writer := lz4.NewWriter(&b)
 
@@ -23,7 +23,7 @@ func compressString(input string) ([]byte, error) {
 	return b.Bytes(), nil
 }
 
-func decompressString(input []byte) (string, error) {
+func DecompressString(input []byte) (string, error) {
 	reader := lz4.NewReader(bytes.NewReader(input))
 
 	decompressed := make([]byte, len(input)*3) // Make a buffer large enough to hold the decompressed data

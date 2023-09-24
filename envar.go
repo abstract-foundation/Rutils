@@ -14,7 +14,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func encrypt(plainText, password string) (string, error) {
+func Encrypt(plainText, password string) (string, error) {
 	// Generate a 256-bit key from the password using SHA-256
 	key := sha256.Sum256([]byte(password))
 
@@ -44,7 +44,7 @@ func encrypt(plainText, password string) (string, error) {
 	return hex.EncodeToString(encryptedText), nil
 }
 
-func decrypt(encryptedText, password string) (string, error) {
+func Decrypt(encryptedText, password string) (string, error) {
 	// Generate a 256-bit key from the password using SHA-256
 	key := sha256.Sum256([]byte(password))
 
