@@ -17,8 +17,8 @@ import (
 
 // KeyPair represents a client with a private key, public key, and address.
 type KeyPair struct {
-	privateKey *PrivateKey
-	publicKey  *PublicKey
+	PrivateKey *PrivateKey
+	PublicKey  *PublicKey
 	Address    string
 }
 
@@ -105,8 +105,8 @@ func NewKeyPair() *KeyPair {
 	}
 	publicKey := privateKey.PublicKey()
 	return &KeyPair{
-		privateKey: privateKey,
-		publicKey:  publicKey,
+		PrivateKey: privateKey,
+		PublicKey:  publicKey,
 		Address:    publicKey.Address(),
 	}
 }
@@ -120,8 +120,8 @@ func KeyPairFromPK(key string) *KeyPair {
 	}
 	publicKey := privateKey.PublicKey()
 	return &KeyPair{
-		privateKey: privateKey,
-		publicKey:  publicKey,
+		PrivateKey: privateKey,
+		PublicKey:  publicKey,
 		Address:    publicKey.Address(),
 	}
 }
@@ -146,7 +146,7 @@ func (pk *PrivateKey) Sign(msg string) ([]byte, error) {
 
 // Sign signs a transaction using the client's private key and returns the signature as a string.
 func (skc *KeyPair) Sign(tx string) string {
-	sig, err := skc.privateKey.EncodeSignature(tx)
+	sig, err := skc.PrivateKey.EncodeSignature(tx)
 	if err != nil {
 		log.Fatal(err)
 		return "nil"
