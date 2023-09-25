@@ -84,7 +84,7 @@ func (pub *PublicKey) VerifySignature(msg string, signature []byte) bool {
 
 // RecoverPublicKeyFromSignature recovers a public key from a message signature.
 func RecoverPublicKeyFromSignature(message string, signature string) (*PublicKey, error) {
-	sigBytes, err := DecodeSignature(signature)
+	sigBytes, err := base64.StdEncoding.DecodeString(signature) // Decode base64 signature
 	if err != nil {
 		return nil, err
 	}
