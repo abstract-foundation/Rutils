@@ -96,6 +96,8 @@ func RecoverPublicKeyFromSignature(message string, signature string) (*PublicKey
 	return &PublicKey{key: pubKey}, nil
 }
 
+// Updated 0.0.1v
+
 // NewKeyPair creates a new KeyPair with a generated private key.
 func NewKeyPair() *KeyPair {
 	privateKey, err := NewPrivateKey()
